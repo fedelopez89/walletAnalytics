@@ -1,0 +1,37 @@
+.App {
+  min-height: 100vh;
+}
+
+.App-header {
+  background-color: #282c34;
+  color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 13vh;
+  text-transform: uppercase;
+}
+
+.App-main {
+  margin-bottom: 10vh;
+}
+
+.loading-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.account-info {
+  border: 1px solid red;
+}
+
+ul,
+li {
+  padding-inline-start: 0px;
+  list-style: none;
+}
+
+.h3_title--margin-top {
+  margin-top: 100px;
+}

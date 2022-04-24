@@ -1,0 +1,10 @@
+const LOCAL_ENVIRONMENT = "local";
+const DEFAULT_PORT = 4000;
+
+const PORT = process.env.HTTP_SERVER_PORT || DEFAULT_PORT;
+const RUNTIME_ENVIRONMENT = process.env.ENVIRONMENT || LOCAL_ENVIRONMENT;
+
+module.exports = {
+  PORT,
+  RUNTIME_ENVIRONMENT,
+};
