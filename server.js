@@ -41,7 +41,7 @@ app.set("port", process.env.PORT || 3000);
 app.use(webpackDev(webpack(config)));
 
 // Routes
-/* app.use("/api/v1", appRoute); */ // FGL
+app.use("/api/v1", appRoute);
 
 console.log("Starting Server...");
 

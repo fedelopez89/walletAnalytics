@@ -1,5 +1,5 @@
 import express from "express";
-import apiRouterProd from "./products.js";
+import apiRouterProd from "./accounts.js";
 
 const appRoute = express();
 

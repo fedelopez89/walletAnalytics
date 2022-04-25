@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 // Components
 import AccountInfo from "./components/AccountInfo/AccountInfo";
 import AddWalletAddress from "./components/AddWalletAddress/AddWalletAddress";
@@ -14,6 +14,11 @@ const apiUrl = process.env.PORT || "http://localhost:3000";
 
 function App() {
   const exchangeContext = useContext(ExchangeContext);
+  const [onLoadData, setOnLoadData] = useState(false);
+
+  const handlerLoadingData = (bool) => {
+    setOnLoadData(bool);
+  };
 
   const warningEmptyList = exchangeContext.walletAddresses.length === 0 && (
     <p style={{ fontStyle: "italic" }}>
@@ -27,12 +32,17 @@ function App() {
       <main className="App-main">
         <Container>
           <div className="loading-section">
-            <AddWalletAddress />
+            <AddWalletAddress onLoadingData={handlerLoadingData} />
             <ExchangeRate />
           </div>
           <div>
             <h3 className="h3_title--margin-top">Wallet Adresses</h3>
             {warningEmptyList}
+            {onLoadData ? (
+              <div className="div__center">
+                <div className="spinner"></div>
+              </div>
+            ) : null}
             <AccountInfo />
           </div>
         </Container>
