@@ -1,79 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
+// Store
+import ExchangeContext from "../../store/exchange-provider";
 // Styles
 import { Button, TextField } from "@mui/material";
 import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
 
-const CONST_EXCHANGE_RATE = `Exchange Rate`;
-const currencyRateList = [
-  {
-    currency: "USD",
-    rate: "200.10",
-    displayRate: "200.10",
-    editDisabled: true,
-  },
-  {
-    currency: "EUR",
-    rate: "399.10",
-    displayRate: "399.10",
-    editDisabled: true,
-  },
-];
+const CONST_EXCHANGE_RATE = `Exchange Rate (to ETH)`;
 
 const ExchangeRate = () => {
-  const [exchangeRateList, setExchangeRateList] = useState([]);
+  const exchangeCtx = useContext(ExchangeContext);
 
-  useEffect(() => {
-    setExchangeRateList(currencyRateList);
-  }, [])
-  
-  const handleOnChangeCurrency = (currency, event) => {
-    const selectedCurrencyIndex = exchangeRateList.findIndex(
-      (currencyRate) => currencyRate.currency === currency
-    );
-    const updateCurrencyRates = [...exchangeRateList];
-    updateCurrencyRates[selectedCurrencyIndex].displayRate = event.target.value;
-    setExchangeRateList(updateCurrencyRates);
+  const handleOnChangeCurrency = (currency, value) => {
+    return exchangeCtx.changeCurrency(currency, value);
   };
 
   const handleCancelEdit = (currency) => {
-    const selectedCurrencyIndex = exchangeRateList.findIndex(
-      (currencyRate) => currencyRate.currency === currency
-    );
-    const updateCurrencyRates = [...exchangeRateList];
-    updateCurrencyRates[selectedCurrencyIndex].displayRate =
-      updateCurrencyRates[selectedCurrencyIndex].rate;
-    updateCurrencyRates[selectedCurrencyIndex].editDisabled = true;
-    setExchangeRateList(updateCurrencyRates);
+    exchangeCtx.cancelEditCurrency(currency);
   };
 
   const handleSaveEdit = (currency) => {
-    const selectedCurrencyIndex = exchangeRateList.findIndex(
-      (currencyRate) => currencyRate.currency === currency
-    );
-    const updateCurrencyRates = [...exchangeRateList];
-    updateCurrencyRates[selectedCurrencyIndex].rate =
-      updateCurrencyRates[selectedCurrencyIndex].displayRate;
-    updateCurrencyRates[selectedCurrencyIndex].editDisabled = true;
-    setExchangeRateList(updateCurrencyRates);
+    exchangeCtx.saveEditCurrency(currency);
   };
 
   const handleOnEdit = (currency) => {
-    const selectedCurrencyIndex = exchangeRateList.findIndex(
-      (currencyRate) => currencyRate.currency === currency
-    );
-    const updateCurrencyRates = [...exchangeRateList];
-    updateCurrencyRates[selectedCurrencyIndex].editDisabled = false;
-    setExchangeRateList(updateCurrencyRates);
+    exchangeCtx.editCurrency(currency);
   };
 
   return (
     <section>
       <h3 className="h3_title--margin-top">{CONST_EXCHANGE_RATE}</h3>
       <ul>
-        {exchangeRateList.map(
-          ({ currency, rate, displayRate, editDisabled }) => (
+        {exchangeCtx.currencyRateList.map(
+          ({ currency, displayRate, editDisabled, inputError }) => (
             <li key={currency} style={{ marginBottom: "10px" }}>
               <TextField
                 disabled={true}
@@ -82,8 +42,12 @@ const ExchangeRate = () => {
                 value={currency}
               />
               <TextField
+                error={inputError}
+                label={inputError ? "Invalid rate - format 99.99" : null}
                 disabled={editDisabled}
-                onChange={(event) => handleOnChangeCurrency(currency, event)}
+                onChange={(event) =>
+                  handleOnChangeCurrency(currency, event.target.value)
+                }
                 size="small"
                 value={displayRate}
               />

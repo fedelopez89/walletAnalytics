@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 // Styles
 import {
   Button,
@@ -18,8 +18,8 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import CloseIcon from "@material-ui/icons/Close";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-// Utils
-import PropTypes from "prop-types";
+// Store
+import ExchangeContext from "../../store/exchange-provider";
 
 const useStyles = makeStyles({
   root: {
@@ -33,27 +33,28 @@ const useStyles = makeStyles({
   },
 });
 
-const AccountInfo = (props) => {
-  const { walletAddresses, onChangeCurrency, onSignOut, onSortFav, onTagFav } =
-    props;
+const AccountInfo = () => {
   const classes = useStyles();
   const [sortFavActive, setsortFavActive] = useState(false);
+  const exchangeCtx = useContext(ExchangeContext);
+
+  if (exchangeCtx.walletAddresses.length === 0) return null;
 
   const handleCloseEthAddress = (address) => {
-    onSignOut(address);
+    exchangeCtx.signOutAccount(address);
   };
 
   const handleTagFavorite = (address) => {
-    onTagFav(address);
+    exchangeCtx.tagFavoriteAccount(address);
   };
 
   const clickonSortFav = () => {
-    onSortFav(sortFavActive);
+    exchangeCtx.sortAccountBy(sortFavActive);
     setsortFavActive((prevState) => !prevState);
   };
 
   const handleCurrencyChange = (value, address) => {
-    onChangeCurrency(address, value);
+    exchangeCtx.changeAccountCurrency(address, value);
   };
 
   return (
@@ -77,8 +78,9 @@ const AccountInfo = (props) => {
               <h4>Age</h4>
             </TableCell>
             <TableCell align="center">
-              {walletAddresses.filter(({ favorite }) => favorite === true)
-                .length > 0 ? (
+              {exchangeCtx.walletAddresses.filter(
+                ({ favorite }) => favorite === true
+              ).length > 0 ? (
                 sortFavActive ? (
                   <Button onClick={clickonSortFav}>
                     <KeyboardArrowDownIcon />
@@ -96,7 +98,7 @@ const AccountInfo = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {walletAddresses.map(
+          {exchangeCtx.walletAddresses.map(
             ({ address, balance, currency, favorite, isOld }, id) => (
               <TableRow className={classes.root} key={address}>
                 <TableCell component="th" scope="row" align="center">
@@ -153,23 +155,6 @@ const AccountInfo = (props) => {
       </Table>
     </TableContainer>
   );
-};
-
-AccountInfo.propTypes = {
-  walletAddresses: PropTypes.arrayOf(
-    PropTypes.shape({
-      address: PropTypes.string.isRequired,
-      balance: PropTypes.string.isRequired,
-      currency: PropTypes.string.isRequired,
-      favorite: PropTypes.bool,
-      idLoaded: PropTypes.number,
-      isOld: PropTypes.bool,
-    })
-  ),
-  onChangeCurrency: PropTypes.func.isRequired,
-  onSignOut: PropTypes.func.isRequired,
-  onSortFav: PropTypes.func.isRequired,
-  onTagFav: PropTypes.func.isRequired,
 };
 
 export default AccountInfo;
