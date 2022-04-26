@@ -14,6 +14,7 @@ Build a generic platform that return analytics on Ethereum wallets.
 5. Ready to test App :)
 
 <img width="1535" alt="image" src="https://user-images.githubusercontent.com/1664426/165194338-98854949-e5f5-4fbe-8ae8-e6de296cd389.png">
+<img width="1523" alt="image" src="https://user-images.githubusercontent.com/1664426/165194568-aaf683c8-57e8-41cd-a827-5bb1109a7ff7.png">
 
 
 # Tools
