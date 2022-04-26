@@ -5,6 +5,14 @@
 
 Build a generic platform that return analytics on Ethereum wallets.
 
+# How to run App
+
+1. Git clone project
+2. npm install
+3. Run on terminal: `node server.js`
+4. Open browser and go to LOCALHOST (http://localhost:3000/) to see FrontEnd App.
+5. Ready to test App :)
+
 # Tools
 
 To get information on Ethereum wallet please use https://etherscan.io/apis.
@@ -60,5 +68,3 @@ For the `is-old` validation , I firstly get the list of normal transactions for 
 * Close them idependently.
 * Change current currency and balance account will be update.
 * Edit exchange rate and if there are account address that match with the editabled currency they will be automatically updated.
-
-# Note on Wallet vs Address
