@@ -9,15 +9,16 @@ import ExchangeContext from "../../store/exchange-provider";
 
 const INPUT_PLACEHOLDER = "Ethereum Address";
 const ERROR_INVALID_ADDRESS = "Error! Invalid address format";
+const ERROR_DUPLICATE_ADDRESS = "Error! Address is already added";
 
 const AddWalletAddress = ({ onLoadingData }) => {
   const [address, setAddress] = useState("");
   const exchangeContext = useContext(ExchangeContext);
-  const [inputError, setInputError] = useState(false);
+  const [inputError, setInputError] = useState({ value: false, msgError: "" });
 
   const handleOnChangeEvent = (event) => {
-    if (inputError) {
-      setInputError(false);
+    if (inputError.value) {
+      setInputError({ value: false, msgError: "" });
     }
     setAddress(event.target.value);
   };
@@ -28,7 +29,16 @@ const AddWalletAddress = ({ onLoadingData }) => {
     if (response.status != 1) {
       setAddress("");
       onLoadingData(false);
-      return setInputError(true);
+      return setInputError({ value: true, msgError: ERROR_INVALID_ADDRESS });
+    }
+    if (
+      exchangeContext.walletAddresses.filter(
+        (account) => account.address === address
+      ).length > 0
+    ) {
+      setAddress("");
+      onLoadingData(false);
+      return setInputError({ value: true, msgError: ERROR_DUPLICATE_ADDRESS });
     }
     const listNormalTrx = await getListNormalTrxByAddress(address);
     const isOld = walletAddressIsOld(listNormalTrx[0].timeStamp);
@@ -42,8 +52,8 @@ const AddWalletAddress = ({ onLoadingData }) => {
     <section style={{ width: "55%" }}>
       <h3 className="h3_title--margin-top">Load Account</h3>
       <TextField
-        error={inputError}
-        label={inputError ? ERROR_INVALID_ADDRESS : INPUT_PLACEHOLDER}
+        error={inputError.value}
+        label={inputError.value ? inputError.msgError : INPUT_PLACEHOLDER}
         onChange={handleOnChangeEvent}
         value={address}
         style={{ width: "75%" }}
